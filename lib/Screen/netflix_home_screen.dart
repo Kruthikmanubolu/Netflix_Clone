@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, sort_child_properties_last
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/Common/utils.dart';
@@ -21,20 +23,116 @@ class NetflixHomeScreen extends StatefulWidget {
 
 class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
   final ApiServices apiServices = ApiServices();
+  final ScrollController _scrollController =
+      ScrollController(); // In your state class
   late Future<Movie?> movieData;
   late Future<UpcomingMovies?> upcomingMovies;
   late Future<TopRated?> topRatedMovies;
   late Future<TrendingMovies?> trendingMovies;
   late Future<PopularTvSeries?> popularTvSeries;
+  String selectedType = 'movie'; // or 'tv'
+  List<dynamic> genres = [];
+  List<dynamic> genreFilteredResults = [];
+  int? selectedGenreId;
+
+  var selectedGenreName;
 
   @override
   void initState() {
+    super.initState();
+    loadGenres();
     movieData = apiServices.fetchMovies();
     upcomingMovies = apiServices.upComingMovies();
     topRatedMovies = apiServices.topRatedMovies();
     trendingMovies = apiServices.trendingMovies();
     popularTvSeries = apiServices.popularTvSeries();
-    super.initState();
+  }
+
+  void loadGenres() async {
+    final genreList = await apiServices.fetchGenres(selectedType);
+    setState(() {
+      genres = genreList;
+    });
+  }
+
+  Widget genrePickerSheet() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      height: 400,
+      decoration: const BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Text(
+                "Select Genre",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Spacer(),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    selectedGenreId = null;
+                    selectedGenreName = null;
+                    genreFilteredResults.clear();
+                  });
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  "Clear",
+                  style: TextStyle(color: Colors.redAccent, fontSize: 16),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Expanded(
+            child: ListView.builder(
+              itemCount: genres.length,
+              itemBuilder: (context, index) {
+                final genre = genres[index];
+                final isSelected = genre['id'] == selectedGenreId;
+
+                return ListTile(
+                  title: Text(
+                    genre['name'],
+                    style: TextStyle(
+                      color: isSelected ? Colors.greenAccent : Colors.white,
+                      fontWeight: isSelected
+                          ? FontWeight.bold
+                          : FontWeight.normal,
+                    ),
+                  ),
+                  trailing: isSelected
+                      ? const Icon(Icons.check, color: Colors.greenAccent)
+                      : null,
+                  onTap: () async {
+                    final results = await apiServices.fetchByGenre(
+                      selectedType,
+                      genre['id'],
+                    );
+                    setState(() {
+                      selectedGenreId = genre['id'];
+                      selectedGenreName = genre['name'];
+                      genreFilteredResults = results;
+                    });
+                    Navigator.pop(context);
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -42,6 +140,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -76,7 +175,13 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
               child: Row(
                 children: [
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _scrollController.animateTo(
+                        1500,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeOut,
+                      );
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(color: Colors.white38),
@@ -91,7 +196,13 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                   ),
                   const SizedBox(width: 8),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _scrollController.animateTo(
+                        500,
+                        duration: Duration(milliseconds: 500),
+                        curve: Curves.easeOut,
+                      );
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(color: Colors.white38),
@@ -106,21 +217,32 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                   ),
                   const SizedBox(width: 8),
                   MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: Colors.black,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (context) => genrePickerSheet(),
+                      );
+                    },
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(color: Colors.white38),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
-                          'Categories',
-                          style: TextStyle(
+                          selectedGenreName ?? 'Categories',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                        const Icon(Icons.keyboard_arrow_down, color: Colors.white),
                       ],
                     ),
                   ),
@@ -201,7 +323,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: 10,
+                    bottom: -80,
                     left: 0,
                     right: 0,
                     child: Padding(
@@ -287,8 +409,78 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                 ],
               ),
             ),
+
             SizedBox(height: 30),
-            // ... other parts of the build method ...
+
+            // ... other parts of the build method ..
+            if (selectedGenreId != null && genreFilteredResults.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(left: 10, top: 50, bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Filtered by Genre : -- ${selectedGenreName}",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: genreFilteredResults.length,
+                        itemBuilder: (context, index) {
+                          final item = genreFilteredResults[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (selectedType == 'tv') {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          TvDetailedScreen(tvId: item['id']),
+                                    ),
+                                  );
+                                } else {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => MovieDetailedScreen(
+                                        movieId: item['id'],
+                                      ),
+                                    ),
+                                  );
+                                }
+                              },
+                              child: Container(
+                                width: 130,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                  image: DecorationImage(
+                                    image: CachedNetworkImageProvider(
+                                      item['poster_path'] != null
+                                          ? "$imageUrl${item['poster_path']}"
+                                          : "https://via.placeholder.com/150",
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
             moviesTypes(
               future: trendingMovies,
               movieType: 'Trending Movies on Netflix',
@@ -322,7 +514,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
     bool isReverse = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 20),
+      padding: const EdgeInsets.only(left: 10, top: 50, bottom: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

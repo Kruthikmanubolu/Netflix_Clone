@@ -309,4 +309,32 @@ class ApiServices {
       rethrow;
     }
   }
+
+  Future<List<dynamic>> fetchGenres(String type) async {
+    final response = await http.get(
+      Uri.parse(
+        'https://api.themoviedb.org/3/genre/$type/list?api_key=$apiKey',
+      ),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['genres'];
+    } else {
+      throw Exception('Failed to load genres');
+    }
+  }
+
+  Future<List<dynamic>> fetchByGenre(String type, int genreId) async {
+    final response = await http.get(
+      Uri.parse(
+        'https://api.themoviedb.org/3/discover/$type?api_key=$apiKey&with_genres=$genreId',
+      ),
+    );
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      return data['results'];
+    } else {
+      throw Exception('Failed to load content by genre');
+    }
+  }
 }
