@@ -74,7 +74,7 @@ lib/
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/yourusername/netflix_clone_flutter.git
+git clone https://github.com/kruthikmanubolu/netflix_clone_flutter.git
 cd netflix_clone_flutter
 flutter pub get
 const String apiKey = 'YOUR_TMDB_API_KEY';
