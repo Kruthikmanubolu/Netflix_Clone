@@ -89,3 +89,30 @@ flutter run
 📸 Screenshots
 
 <table> <tr> <td align="center"> <img src="screenshots/Splash.jpg" alt="Splash Screen" width="200"/><br/> <b>Splash Screen</b> </td> <td align="center"> <img src="screenshots/Home.jpg" alt="Home Screen" width="200"/><br/> <b>Home Screen</b> </td> <td align="center"> <img src="screenshots/Movies_TV.jpg" alt="Movies and TV Shows" width="200"/><br/> <b>Movies & TV</b> </td> </tr> <tr> <td align="center"> <img src="screenshots/Details.jpg" alt="Details Screen" width="200"/><br/> <b>Details</b> </td> <td align="center"> <img src="screenshots/More.jpg" alt="More Like This" width="200"/><br/> <b>More Like This</b> </td> <td align="center"> <img src="screenshots/Search.jpg" alt="Search Screen" width="200"/><br/> <b>Search</b> </td> </tr> <tr> <td colspan="3" align="center"> <img src="screenshots/Video.jpg" alt="Video Player Screen" width="300"/><br/> <b>Video Player</b> </td> </tr> </table>
+
+
+### 1. Prepare your app for release
+
+```bash
+defaultConfig {
+    ...
+    minSdkVersion 21 // or higher if needed
+    targetSdkVersion 34
+    versionCode 1
+    versionName "1.0.0"
+}
+```
+### 2. Build release APK
+
+```bash
+flutter build apk --release
+```
+
+### 3. This will generate an optimized release APK at:
+
+```bash
+build/app/outputs/flutter-apk/app-release.apk
+```
+
+
+## Enjoy!!!!
