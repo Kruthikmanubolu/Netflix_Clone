@@ -114,5 +114,6 @@ flutter build apk --release
 build/app/outputs/flutter-apk/app-release.apk
 ```
 
+### 4. If you want to check out the mobile version -- app download the apk named app-release.apk -- you will get the app and install in your device -- CAUTION -- Might not work in IOS
 
 ## Enjoy!!!!
