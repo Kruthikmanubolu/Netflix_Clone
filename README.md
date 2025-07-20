@@ -55,18 +55,17 @@ lib/
 │
 └── main.dart
 
-
 ---
 
 ## 🧰 Tech Stack
 
-| Technology         | Description                           |
-|--------------------|---------------------------------------|
-| **Flutter**        | UI framework for cross-platform apps  |
-| **Dart**           | Programming language                  |
-| **TMDB API**       | Real-time movie & TV metadata         |
-| **CachedNetworkImage** | Image loading and caching         |
-| **Lottie**         | Splash animation                     |
+| Technology             | Description                          |
+| ---------------------- | ------------------------------------ |
+| **Flutter**            | UI framework for cross-platform apps |
+| **Dart**               | Programming language                 |
+| **TMDB API**           | Real-time movie & TV metadata        |
+| **CachedNetworkImage** | Image loading and caching            |
+| **Lottie**             | Splash animation                     |
 
 ---
 
@@ -89,10 +88,4 @@ flutter run
 
 ## 📸 Screenshots
 
-> ![Splash Screen](<WhatsApp Image 2025-07-20 at 07.24.07_d5c5d7f1.jpg>)
-> ![Home Screen](<WhatsApp Image 2025-07-20 at 07.24.07_04c600fc.jpg>)
-> ![Movies and TV Shows](<WhatsApp Image 2025-07-20 at 07.24.07_f7bf12ea.jpg>)
-> ![Details Screen](<WhatsApp Image 2025-07-20 at 07.24.07_932bdc80.jpg>)
-> ![More Like this](<WhatsApp Image 2025-07-20 at 07.24.07_2135b9c2.jpg>)
-> ![Search](<WhatsApp Image 2025-07-20 at 07.24.08_ffeb4f36.jpg>)
-> ![Video Player Screen](<WhatsApp Image 2025-07-20 at 07.24.08_4e252704.jpg>)
+<table> <tr> <td><img src="screenshots/Splash.jpg" alt="Splash Screen" width="200"/></td> <td><img src="screenshots/Home.jpg" alt="Home Screen" width="200"/></td> <td><img src="screenshots/Movies_TV.jpg" alt="Movies and TV Shows" width="200"/></td> </tr> <tr> <td align="center"><b>Splash Screen</b></td> <td align="center"><b>Home Screen</b></td> <td align="center"><b>Movies & TV</b></td> </tr> <tr> <td><img src="screenshots/Details.jpg" alt="Details Screen" width="200"/></td> <td><img src="screenshots/More.jpg" alt="More Like This" width="200"/></td> <td><img src="screenshots/Search.jpg" alt="Search Screen" width="200"/></td> </tr> <tr> <td align="center"><b>Details</b></td> <td align="center"><b>More Like This</b></td> <td align="center"><b>Search</b></td> </tr> <tr> <td colspan="3" align="center"> <img src="screenshots/Video.jpg" alt="Video Player Screen" width="300"/> <div><b>Video Player</b></div> </td> </tr> </table>
