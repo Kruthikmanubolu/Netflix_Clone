@@ -323,7 +323,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                     ),
                   ),
                   Positioned(
-                    bottom: -80,
+                    bottom: 20,
                     left: 0,
                     right: 0,
                     child: Padding(
@@ -336,6 +336,7 @@ class _NetflixHomeScreenState extends State<NetflixHomeScreen> {
                           Expanded(
                             child: GestureDetector(
                               onTap: () {
+                                print("Play button tapped"); // Add this
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
